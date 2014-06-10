@@ -11,6 +11,7 @@ Follow the instructions [here](https://github.com/rwaldron/johnny-five#setup-and
 Connect the tmp36 sensor to the arduino the following way:
 
 ![Breadboard](docs/breadboard/domo.png)
+
 [docs/breadboard/domo.fzz](docs/breadboard/domo.fzz)
 
 ### Server
