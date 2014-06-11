@@ -67,7 +67,9 @@
       	.style('position', 'absolute')
       	.style('z-index', '10')
       	.style('visibility', 'hidden')
-      	.style('font-size', '1.1em');
+      	.style('font-size', '1.2em')
+        .style('color', '#e95d4f')
+        .style('font-weight', 'bold');
 
     svg = d3.select('body')
       .append('p')
@@ -101,7 +103,7 @@
       .append('g')
         .attr('class', 'y axis')
         .call(y.axis = d3.svg.axis().scale(y).orient('left'))
-        .append('text').text('T (C°)').attr('transform', 'translate(-7, -10)');
+        .append('text').text('T (C°)').attr('transform', 'translate(-15, -15)');
 
     if (conf.live) {
       path = svg
