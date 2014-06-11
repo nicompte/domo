@@ -53,10 +53,18 @@
         .domain([5, 40])
         .range([height, 0]);
 
-    line = d3.svg.line()
+    if (conf.live) {
+      line = d3.svg.line()
         .interpolate('basis')
         .x(function (d, i) { return x(now - (conf.n - 1 - i) * conf.d); })
         .y(function (d) { return y(d); });
+    } else {
+      line = d3.svg.line()
+        .interpolate('basis')
+        .x(function (d, i) { return x(now - (conf.n - i) * conf.d); })
+        .y(function (d) { return y(d); });
+    }
+
 
     // Destroy previous graph
     $('p').remove();
@@ -155,11 +163,21 @@
       .call(x.axis);
 
     // Slide the line left
-    path.transition()
-      .duration(conf.d)
-      .ease('linear')
-      .attr('transform', 'translate(' + x(now - (conf.n - 1) * conf.d) + ')')
-      .each('end', tick );
+    if( conf.live ){
+      path.transition()
+        .duration(conf.d)
+        .ease('linear')
+        .attr('transform', 'translate(' + x(now - (conf.n - 1) * conf.d) + ')')
+        .each('end', tick );
+    } else {
+      path.transition()
+        .duration(conf.d)
+        .ease('linear')
+        .attr('transform', 'translate(' + x(now - conf.n * conf.d) + ')')
+        .each('end', tick );
+    }
+
+
 
     // Pop the old data point off the front
     conf.data.shift();
