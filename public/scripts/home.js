@@ -105,39 +105,27 @@
         .call(y.axis = d3.svg.axis().scale(y).orient('left'))
         .append('text').text('T (C°)').attr('transform', 'translate(-15, -15)');
 
-    if (conf.live) {
-      path = svg
-        .append('g')
-          .attr('id', 'path')
-          .attr('clip-path', 'url(#clip)')
-          .append('path')
-            .data([conf.data])
-            .attr('class', 'line');
-    } else {
-      path = svg
-        .append('g')
-          .attr('id', 'path')
-          .attr('clip-path', 'url(#clip)')
-          .append('path')
-            .data([conf.data])
-            .attr('class', 'line')
-            .on('mouseover', function(){
-              var m = d3.mouse(this);
-              tooltip.text(y.invert(m[1]).toFixed(0) + ' °');
-              tooltip.style('visibility', 'visible');
-              //return tooltip;
-            })
+
+    path = svg
+      .append('g')
+        .attr('id', 'path')
+        .attr('clip-path', 'url(#clip)')
+        .append('path')
+          .data([conf.data])
+          .attr('class', 'line')
+          .on('mouseover', function(){
+            var m = d3.mouse(this);
+            tooltip.text(y.invert(m[1]).toFixed(0) + ' °');
+            tooltip.style('visibility', 'visible');
+          })
           .on('mousemove', function(){
             var m = d3.mouse(this);
             tooltip.text(y.invert(m[1]).toFixed(0) + ' °');
               tooltip.style('top', (event.pageY-25)+'px').style('left',(event.pageX+15)+'px');
-              //return tooltip;
-            })
-            .on('mouseout', function(){
-              tooltip.style('visibility', 'hidden');
-            });
-    }
-
+          })
+          .on('mouseout', function(){
+            tooltip.style('visibility', 'hidden');
+          });
 
   }
 
