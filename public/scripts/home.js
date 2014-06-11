@@ -2,7 +2,7 @@
 
   'use strict';
 
-  var x, y, line, svg, xAxis, yAxis, path, tempText, now, temp, margin, width, height, confs, conf, socket, myFormatters;
+  var x, y, line, svg, xAxis, yAxis, path, tempText, now, temp, margin, width, height, confs, conf, socket, myFormatters, tooltip;
 
   // Get page width
   function getWidth() {
@@ -61,6 +61,14 @@
     // Destroy previous graph
     $('p').remove();
 
+    tooltip = d3.select('body')
+    	.append('div')
+        //.attr('class', 'tooltip')
+      	.style('position', 'absolute')
+      	.style('z-index', '10')
+      	.style('visibility', 'hidden')
+      	.style('font-size', '1.1em');
+
     svg = d3.select('body')
       .append('p')
       .append('svg')
@@ -111,9 +119,21 @@
           .append('path')
             .data([conf.data])
             .attr('class', 'line')
-            // Tooltip
-            .on('mousemove', mMove)
-            .append('title');
+            .on("mouseover", function(){
+              var m = d3.mouse(this)
+              tooltip.text(y.invert(m[1]).toFixed(0) + ' °')
+              tooltip.style("visibility", "visible");
+              //return tooltip;
+            })
+          	.on("mousemove", function(){
+              var m = d3.mouse(this)
+              tooltip.text(y.invert(m[1]).toFixed(0) + ' °')
+              tooltip.style("top", (event.pageY-25)+"px").style("left",(event.pageX+15)+"px");
+              //return tooltip;
+            })
+          	.on("mouseout", function(){
+              tooltip.style("visibility", "hidden");
+            });
     }
 
 
@@ -122,7 +142,12 @@
   function mMove() {
     /* jshint strict: false */
     var m = d3.mouse(this);
-    d3.select('#path').select('title').text(y.invert(m[1]).toFixed(0) + ' °');
+
+    // d3.select('#path').select('title').text(y.invert(m[1]).toFixed(0) + ' °');
+    // $('.logo').tooltip({  container: 'svg', title: y.invert(m[1]).toFixed(0) + ' °' });
+    // $('.logo').tooltip('show');
+    tempText.text('(' + y.invert(m[1]).toFixed(0) + ' °)');
+
   }
 
   function tick() {
@@ -150,15 +175,12 @@
       .ease('linear')
       .call(x.axis);
 
-
-
-      // Slide the line left
-      path.transition()
-        .duration(conf.d)
-        .ease('linear')
-        .attr("transform", "translate(" + x(now - (conf.n - 1) * conf.d) + ")")
-        .each('end', function() { return (function(conf) { tick(conf); })(conf) } );
-
+    // Slide the line left
+    path.transition()
+      .duration(conf.d)
+      .ease('linear')
+      .attr("transform", "translate(" + x(now - (conf.n - 1) * conf.d) + ")")
+      .each('end', function() { return (function(conf) { tick(conf); })(conf) } );
 
     // Pop the old data point off the front
     conf.data.shift();
@@ -264,6 +286,18 @@
   * DOM EVENTS
   */
 
+  // Resize graph on window resize
+  var doIt;
+  $(window).on('resize', function(){
+    clearTimeout(doIt);
+    doIt = setTimeout(function () {
+      width = getWidth() - margin.right - margin.left - 0;
+      height = getHeight() - margin.top - margin.bottom - 100;
+      $('.active').click();
+    }, 500);
+  });
+
+  // Button events
   $('button').on('click', function () {
 
     var resourceName, variableName;
