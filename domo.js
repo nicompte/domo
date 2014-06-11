@@ -89,9 +89,9 @@
             if(weekI === '23'){
               client.set('week_i', 0);
               client.lrange('temps_15mn', 71, -1, function(err, nodes){
-                var sum = nodes.reduce(function(a, b) { return parseInt(a, 10) + parseInt(b, 10) });
+                var sum = nodes.reduce(function(a, b) { return parseInt(a, 10) + parseInt(b, 10); });
                 var mean = (sum / 24).toFixed(0);
-                timeClient.storeTemp(currentTemp, 'last_360mn', 'week_i', 'temps_360mn', 360, 375, 28);
+                timeClient.storeTemp(mean, 'last_360mn', 'week_i', 'temps_360mn', 360, 375, 28);
               });
             }else{
               client.incr('week_i');
@@ -104,7 +104,7 @@
             if(monthI === '47'){
               client.set('month_i', 0);
               client.lrange('temps_15mn', 47, -1, function(err, nodes){
-                var sum = nodes.reduce(function(a, b) { return parseInt(a, 10) + parseInt(b, 10) });
+                var sum = nodes.reduce(function(a, b) { return parseInt(a, 10) + parseInt(b, 10); });
                 var mean = (sum / 48).toFixed(0);
                 timeClient.storeTemp(mean, 'last_720mn', 'month_i', 'temps_720mn', 720, 780, 61);
                 timeClient.storeTemp(mean, 'last_720mn_a', 'year_i', 'temps_720mn_a', 720, 780, 731);

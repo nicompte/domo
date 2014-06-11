@@ -62,12 +62,12 @@
     $('p').remove();
 
     tooltip = d3.select('body')
-    	.append('div')
+      .append('div')
         //.attr('class', 'tooltip')
-      	.style('position', 'absolute')
-      	.style('z-index', '10')
-      	.style('visibility', 'hidden')
-      	.style('font-size', '1.2em')
+        .style('position', 'absolute')
+        .style('z-index', '10')
+        .style('visibility', 'hidden')
+        .style('font-size', '1.2em')
         .style('color', '#e95d4f')
         .style('font-weight', 'bold');
 
@@ -121,34 +121,23 @@
           .append('path')
             .data([conf.data])
             .attr('class', 'line')
-            .on("mouseover", function(){
-              var m = d3.mouse(this)
-              tooltip.text(y.invert(m[1]).toFixed(0) + ' °')
-              tooltip.style("visibility", "visible");
+            .on('mouseover', function(){
+              var m = d3.mouse(this);
+              tooltip.text(y.invert(m[1]).toFixed(0) + ' °');
+              tooltip.style('visibility', 'visible');
               //return tooltip;
             })
-          	.on("mousemove", function(){
-              var m = d3.mouse(this)
-              tooltip.text(y.invert(m[1]).toFixed(0) + ' °')
-              tooltip.style("top", (event.pageY-25)+"px").style("left",(event.pageX+15)+"px");
+          .on('mousemove', function(){
+            var m = d3.mouse(this);
+            tooltip.text(y.invert(m[1]).toFixed(0) + ' °');
+              tooltip.style('top', (event.pageY-25)+'px').style('left',(event.pageX+15)+'px');
               //return tooltip;
             })
-          	.on("mouseout", function(){
-              tooltip.style("visibility", "hidden");
+            .on('mouseout', function(){
+              tooltip.style('visibility', 'hidden');
             });
     }
 
-
-  }
-
-  function mMove() {
-    /* jshint strict: false */
-    var m = d3.mouse(this);
-
-    // d3.select('#path').select('title').text(y.invert(m[1]).toFixed(0) + ' °');
-    // $('.logo').tooltip({  container: 'svg', title: y.invert(m[1]).toFixed(0) + ' °' });
-    // $('.logo').tooltip('show');
-    tempText.text('(' + y.invert(m[1]).toFixed(0) + ' °)');
 
   }
 
@@ -181,8 +170,8 @@
     path.transition()
       .duration(conf.d)
       .ease('linear')
-      .attr("transform", "translate(" + x(now - (conf.n - 1) * conf.d) + ")")
-      .each('end', function() { return (function(conf) { tick(conf); })(conf) } );
+      .attr('transform', 'translate(' + x(now - (conf.n - 1) * conf.d) + ')')
+      .each('end', tick );
 
     // Pop the old data point off the front
     conf.data.shift();
@@ -227,7 +216,7 @@
     * msIn10mn = 1000 * 60 * 10 = 600000
     * d = msIn10mn / 60 = 10000
     */
-    direct: { n: 802, d: 750, data: d3.range(802).map(function () { return currentTemp; }), ticks: 20, live: true,
+    direct: { n: 243, d: 750, data: d3.range(243).map(function () { return currentTemp; }), ticks: 6, live: true,
     timeFormat: function (d) {
       if (d.getSeconds() === 30) {
         return '';
@@ -280,7 +269,7 @@
   height = getHeight() - margin.top - margin.bottom - 100; //100 : padding boutons
 
   // Create first graph, with default 1 day configuration
-  conf = confs.temps15mn
+  conf = confs.temps15mn;
   setupGraph();
   tick();
 
