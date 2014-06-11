@@ -21,59 +21,59 @@
     */
     storeTemp: function(temp, lastMeasureKey, iKey, key, timeBetweenMeasures, maxTimeBetweenMeasures, numberOfMeasures){
 
-        client.get(lastMeasureKey, function (err, last) {
+      client.get(lastMeasureKey, function (err, last) {
 
-          var nbOfTimes, nbOfTimesW, nbOfTimesD, nbTokens, now;
-          last = parseInt(last, 10);
+        var nbOfTimes, nbOfTimesW, nbOfTimesD, nbTokens, now;
+        last = parseInt(last, 10);
 
-          now = new Date().getTime();
+        now = new Date().getTime();
 
-          // If too much time between two measures
-          if (now - last > moment.duration(maxTimeBetweenMeasures, 'minutes').asMilliseconds()) {
-            // Number of times the measure was missed
-            nbOfTimes = (now - last) / moment.duration(timeBetweenMeasures, 'minutes').asMilliseconds();
-            // Number of measure we have to "fill"
-            nbOfTimesW = Math.floor(nbOfTimes);
-            // Convert the rest to count, and add it to the counter
-            nbOfTimesD = nbOfTimes - nbOfTimesW;
-            nbTokens = (nbOfTimesD * numberOfMeasures).toFixed(0);
-            client.get(iKey, function(err, iKeyValue){
-              iKeyValue = parseInt(iKeyValue, 10);
-              if (iKeyValue + nbTokens > numberOfMeasures) {
-                nbOfTimesW ++;
-                nbTokens = iKeyValue + nbTokens - numberOfMeasures;
-                client.set(iKey, nbTokens);
-              }
-              console.log('---');
-              console.log('Must catch up for ' + key + ', missed ' + moment.duration(now - last).asMinutes().toFixed(0) + 'mn while max authorized is ' + maxTimeBetweenMeasures + 'mn.');
-              console.log('Adding ' + nbTokens + ' to counter.');
-              console.log('Adding ' + nbOfTimesW + ' measures.');
-              console.log('---');
-              // Add measures for missing times
-              for (var i=0; i < nbOfTimesW; i++) {
-                client.llen(key, function(err, len){
-                  if(len === numberOfMeasures){
-                    client.lpop(key);
-                  }
-                  client.rpush(key, 0);
-                });
-              }
-              client.set(lastMeasureKey, now);
-            });
-
-          } else {
-
-            client.llen(key, function(err, len){
-              // Store only 96 values : (15*96) / 60 = 24h
+        // If too much time between two measures
+        if (now - last > moment.duration(maxTimeBetweenMeasures, 'minutes').asMilliseconds()) {
+          // Number of times the measure was missed
+          nbOfTimes = (now - last) / moment.duration(timeBetweenMeasures, 'minutes').asMilliseconds();
+          // Number of measure we have to "fill"
+          nbOfTimesW = Math.floor(nbOfTimes);
+          // Convert the rest to count, and add it to the counter
+          nbOfTimesD = nbOfTimes - nbOfTimesW;
+          nbTokens = (nbOfTimesD * numberOfMeasures).toFixed(0);
+          client.get(iKey, function(err, iKeyValue){
+            iKeyValue = parseInt(iKeyValue, 10);
+            if (iKeyValue + nbTokens > numberOfMeasures) {
+              nbOfTimesW ++;
+              nbTokens = iKeyValue + nbTokens - numberOfMeasures;
+              client.set(iKey, nbTokens);
+            }
+            console.log('---');
+            console.log('Must catch up for ' + key + ', missed ' + moment.duration(now - last).asMinutes().toFixed(0) + 'mn while max authorized is ' + maxTimeBetweenMeasures + 'mn.');
+            console.log('Adding ' + nbTokens + ' to counter.');
+            console.log('Adding ' + nbOfTimesW + ' measures.');
+            console.log('---');
+            // Add measures for missing times
+            for (var i=0; i < nbOfTimesW; i++) {
+              client.llen(key, function(err, len){
                 if(len === numberOfMeasures){
                   client.lpop(key);
                 }
-              client.rpush(key, temp, function () {
-                client.set(lastMeasureKey, now);
+                client.rpush(key, 0);
               });
-            });
+            }
+            client.set(lastMeasureKey, now);
+          });
 
-          }
+        } else {
+
+          client.llen(key, function(err, len){
+            // Store only 96 values : (15*96) / 60 = 24h
+              if(len === numberOfMeasures){
+                client.lpop(key);
+              }
+            client.rpush(key, temp, function () {
+              client.set(lastMeasureKey, now);
+            });
+          });
+
+        }
 
 
       });
