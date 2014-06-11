@@ -1,0 +1,33 @@
+doctype html
+html(lang="fr")
+  head
+    title Domo
+    link(rel="stylesheet", type="text/css", href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,400,700")
+    link(rel="stylesheet", type="text/css", href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.1.1/css/bootstrap.min.css")
+    link(rel="stylesheet", type="text/css", href="//cdnjs.cloudflare.com/ajax/libs/font-awesome/4.1.0/css/font-awesome.min.css")
+    link(rel="stylesheet", type="text/css", href="css/main.css")
+
+  body
+
+    a(href="https://github.com/nicompte/domo", class="ribbon bg-green", target="_blank") Fork me on GitHub
+
+    span.logo domo
+      i.fa.fa-leaf.rouge
+
+    - if (typeof currentTemp !== "undefined")
+       script.
+         var currentTemp = #{currentTemp};
+         var previousTemps = [#{previousTemps}];
+
+    .row.conf
+      span.btn-group.col-xs-4.col-md-offset-5
+        button.btn.btn-default.direct(type="button", data-temps="direct", data-temps-name="direct") direct
+        button.btn.btn-default.temps_15mn.active(type="button", data-temps="temps_15mn", data-temps-name="temps15mn") 1 jour
+        button.btn.btn-default.temps_360mn(type="button", data-temps="temps_360mn", data-temps-name="temps360mn") 1 semaine
+        button.btn.btn-default.temps_720mn(type="button", data-temps="temps_720mn", data-temps-name="temps720mn") 1 mois
+        button.btn.btn-default.temps_720mn_a(type="button", data-temps="temps_720mn_a", data-temps-name="temps720mna") 1 an
+
+    script(src="/socket.io/socket.io.js", charset="utf-8")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.8/d3.min.js", charset="utf-8")
+    script(src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js", charset="utf-8")
+    script(src="/scripts/home.js", charset="utf-8")
