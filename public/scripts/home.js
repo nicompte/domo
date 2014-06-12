@@ -121,17 +121,17 @@
         .append('path')
           .data([conf.data])
           .attr('class', 'line')
-          .on('mouseover', function(){
+          .on('mouseover', function () {
             var m = d3.mouse(this);
             tooltip.text(y.invert(m[1]).toFixed(0) + ' °');
             tooltip.style('visibility', 'visible');
           })
-          .on('mousemove', function(){
+          .on('mousemove', function () {
             var m = d3.mouse(this);
             tooltip.text(y.invert(m[1]).toFixed(0) + ' °');
-              tooltip.style('top', (event.pageY-25)+'px').style('left',(event.pageX+15)+'px');
+            tooltip.style('top', (event.pageY - 25) + 'px').style('left', (event.pageX + 15) + 'px');
           })
-          .on('mouseout', function(){
+          .on('mouseout', function () {
             tooltip.style('visibility', 'hidden');
           });
 
