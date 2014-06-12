@@ -320,6 +320,7 @@
 
     resourceName = $(this).attr('data-temps');
     variableName = $(this).attr('data-temps-name');
+    ga('send', 'event', 'link', 'click', resourceName);
 
     if (resourceName === 'direct') {
       conf = confs.direct;
